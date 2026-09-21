@@ -1,0 +1,9 @@
+node_modules/
+.pnpm-store/
+main.js
+main.js.map
+dist/
+artifacts/
+coverage/
+.DS_Store
+data.json

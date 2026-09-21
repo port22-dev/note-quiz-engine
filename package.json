@@ -1,0 +1,35 @@
+{
+  "name": "note-quiz-engine",
+  "version": "0.3.0",
+  "license": "MIT",
+  "author": "port22",
+  "repository": { "type": "git", "url": "https://github.com/ryokarimata/note-quiz-engine.git" },
+  "packageManager": "pnpm@10.26.2",
+  "description": "AI-independent Markdown quiz engine for Obsidian.",
+  "private": true,
+  "engines": { "node": ">=20.19.0" },
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc --noEmit && node esbuild.config.mjs production",
+    "lint": "eslint . --max-warnings 0",
+    "test": "vitest run",
+    "check": "pnpm run build && pnpm run lint && pnpm test",
+    "package": "pnpm run build && node scripts/package.mjs"
+  },
+  "dependencies": {
+    "yaml": "^2.8.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "@types/node": "^22.15.0",
+    "esbuild": "^0.25.5",
+    "eslint": "^9.39.0",
+    "jsdom": "^26.1.0",
+    "obsidian": "^1.8.7",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.59.1",
+    "vitest": "^3.2.4"
+  }
+}
