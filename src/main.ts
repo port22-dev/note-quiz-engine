@@ -191,6 +191,7 @@ export default class NoteQuizPlugin extends Plugin {
         template: this.settings.promptTemplate, noteTitle: file.basename, notePath: file.path,
         noteContent: await this.currentContent(file), questionCount: this.settings.questionCount,
         generationId: createAttemptId(),
+        generationLanguage: this.settings.generationLanguage,
       });
       this.trackModal(new PromptModal(this.app, prompt));
     } catch (error) { new Notice(`Could not prepare the prompt: ${messageOf(error)}`, 10000); }
