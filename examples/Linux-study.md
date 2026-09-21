@@ -11,7 +11,7 @@ This sample contains five questions for Note Quiz Engine. All answers are suppor
 
 Click **Start quiz** at the top of this note. Short-answer questions use exact matching after trimming surrounding whitespace and normalizing line endings.
 
-```quiz
+```note-quiz
 quiz:
   id: "linux-kernel-role"
   type: choice
@@ -29,7 +29,7 @@ quiz:
     - "kernel"
 ```
 
-```quiz
+```note-quiz
 quiz:
   id: "linux-memory-command"
   type: text
@@ -44,7 +44,7 @@ quiz:
     - "memory"
 ```
 
-```quiz
+```note-quiz
 quiz:
   id: "linux-disk-troubleshooting"
   type: choice
@@ -62,7 +62,7 @@ quiz:
     - "troubleshooting"
 ```
 
-```quiz
+```note-quiz
 quiz:
   id: "linux-process-command"
   type: text
@@ -75,7 +75,7 @@ quiz:
     - "process"
 ```
 
-```quiz
+```note-quiz
 quiz:
   id: "linux-resource-reasoning"
   type: choice
