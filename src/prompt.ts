@@ -38,7 +38,7 @@ function formatContract(context: PromptContext): string {
 - Target: ${context.questionCount} questions. If the source lacks enough information, explain what is missing instead of inventing facts or answers.
 - Generation ID: ${context.generationId}. Use it to encourage different scenarios and wording; it does not guarantee novelty.
 - Write questions, options, accepted answers, and explanations in the source note's language unless the custom instructions explicitly request a different language. Preserve commands and technical identifiers.
-- Output Markdown with one quiz code block per question. Each block must contain YAML with quiz: as its only root.
+- Output Markdown with one note-quiz code block per question. Each block must contain YAML with quiz: as its only root.
 - Each question needs type, question, and explanation. type must be choice or text. question and explanation must be nonempty strings.
 - For choice, options must contain at least two strings. answer must be a 1-based integer identifying the single correct option.
 - For text, answers must contain at least one accepted string. Grading uses exact matching after trimming leading/trailing whitespace and normalizing CRLF/CR to LF. Case sensitivity depends on the user's settings. There is no semantic or partial matching.
@@ -49,7 +49,7 @@ function formatContract(context: PromptContext): string {
 - Do not output Quiz Results sections or QUIZ_RESULTS_START / QUIZ_RESULTS_END markers.
 
 Syntax examples only: replace these placeholders with real questions based on the source note. Do not include these examples in your response.
-\`\`\`quiz
+\`\`\`note-quiz
 quiz:
   type: choice
   question: "Choose the appropriate response to the cause described in the source note."
@@ -60,7 +60,7 @@ quiz:
   explanation: "The principle described in the source supports response B."
 \`\`\`
 
-\`\`\`quiz
+\`\`\`note-quiz
 quiz:
   type: text
   question: "Name the term described in the source note."

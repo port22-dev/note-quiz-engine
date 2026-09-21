@@ -67,7 +67,7 @@ function scanMarkdown(markdown: string): ScanResult {
         .map((contentLine) => contentLine.replace(indentationPattern, ''))
         .join('\n');
       const isQuiz =
-        language === 'quiz' ||
+        language === 'quiz' || language === 'note-quiz' ||
         ((language === 'yaml' || language === 'yml') && /^quiz\s*:/m.test(text));
       if (isQuiz) {
         if (index === lines.length) {

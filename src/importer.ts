@@ -58,7 +58,7 @@ function collectDefinitions(markdown: string): string {
       const closing = new RegExp(`^[ \\t]*${marker[0]}{${marker.length},}[ \\t]*$`);
       while (index < lines.length && !closing.test(lines[index]!)) index += 1;
       const body = removeSharedIndentation(lines.slice(start + 1, index).join('\n'));
-      if (['quiz', 'yaml', 'yml'].includes(language)) {
+      if (['note-quiz', 'quiz', 'yaml', 'yml'].includes(language)) {
         if (index === lines.length) throw formatError(`Line ${start + 1}: The quiz code block is not closed.`);
         blocks.push(wrapDefinition(body));
       } else if (/^[ \t]*quiz\s*:/m.test(body)) {
@@ -89,7 +89,7 @@ function wrapDefinition(yaml: string): string {
   // A value may contain Markdown fences; a longer fence keeps them literal.
   const longest = Math.max(2, ...[...yaml.matchAll(/`+/g)].map((match) => match[0].length));
   const fence = '`'.repeat(longest + 1);
-  return `${fence}quiz\n${yaml.trimEnd()}\n${fence}`;
+  return `${fence}note-quiz\n${yaml.trimEnd()}\n${fence}`;
 }
 
 function serializeQuestion(question: QuizQuestion): string {

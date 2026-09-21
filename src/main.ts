@@ -11,7 +11,7 @@ import { PromptModal } from './ui/prompt-modal';
 import { createAttemptId, messageOf, QuizModal } from './ui/quiz-modal';
 import { LEGACY_QUIZ_FOLDER } from './output-folder';
 
-const QUIZ_TEMPLATE = '\n```quiz\nquiz:\n  type: choice\n  question: "Which Linux command shows memory usage?"\n  options:\n    - "df"\n    - "free"\n  answer: 2\n  explanation: "The free command shows memory usage."\n```\n\n```quiz\nquiz:\n  type: text\n  question: "Name a Linux command that shows memory usage."\n  answers:\n    - "free"\n    - "free -h"\n    - "free -m"\n  explanation: "The free command shows memory usage."\n```\n';
+const QUIZ_TEMPLATE = '\n```note-quiz\nquiz:\n  type: choice\n  question: "Which Linux command shows memory usage?"\n  options:\n    - "df"\n    - "free"\n  answer: 2\n  explanation: "The free command shows memory usage."\n```\n\n```note-quiz\nquiz:\n  type: text\n  question: "Name a Linux command that shows memory usage."\n  answers:\n    - "free"\n    - "free -h"\n    - "free -m"\n  explanation: "The free command shows memory usage."\n```\n';
 
 export default class NoteQuizPlugin extends Plugin {
   settings = { ...DEFAULT_SETTINGS };
@@ -79,7 +79,9 @@ export default class NoteQuizPlugin extends Plugin {
       if (file?.extension === 'md') void this.openQuiz(file);
       else new Notice('Open a Markdown note containing quiz questions.');
     });
-    this.registerMarkdownCodeBlockProcessor('quiz', (source, element, context) => {
+    // Generic languages such as "quiz" may already belong to another plugin.
+    // Obsidian throws on duplicate registration, preventing the plugin from loading.
+    this.registerMarkdownCodeBlockProcessor('note-quiz', (source, element, context) => {
       const parsed = parseQuizMarkdown(`\`\`\`quiz\n${source}\n\`\`\``);
       const card = element.createDiv({ cls: 'note-quiz-card' });
       const first = parsed.questions[0];
