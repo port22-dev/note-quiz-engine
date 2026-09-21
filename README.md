@@ -22,7 +22,7 @@ The interface is in English. Generated questions follow the language of your sou
 
 Requires Obsidian **1.8.7 or later**. Community plugin listing is not yet available; use manual installation for now. Automatic Claudian generation requires desktop Obsidian. The core quiz engine uses mobile-compatible Obsidian APIs, but runtime testing so far has been on Windows.
 
-1. Download `main.js`, `manifest.json`, and `styles.css` from [the latest release](https://github.com/ryokarimata/note-quiz-engine/releases/latest), or build them from source.
+1. Download `main.js`, `manifest.json`, and `styles.css` from [the latest release](https://github.com/port22-dev/note-quiz-engine/releases/latest), or build them from source.
 2. Place the three files in `<your-vault>/.obsidian/plugins/note-quiz-engine/`.
 3. Reload Obsidian and enable **Note Quiz Engine** in **Settings → Community plugins**.
 
@@ -58,10 +58,12 @@ See [the AI workflow guide](docs/ai-workflow.md) for manual imports, prompt cust
 
 ## Write your own questions
 
-Add one `quiz` code block per question. A note can contain as many questions as you need, alongside ordinary Markdown.
+Version 0.3.1 uses the dedicated `note-quiz` block language to avoid startup conflicts with other quiz plugins. Existing `quiz` blocks remain playable using **Start quiz** in the note toolbar. Change their opening fence to `note-quiz` to show inline quiz cards.
+
+Add one `note-quiz` code block per question. A note can contain as many questions as you need, alongside ordinary Markdown.
 
 ````markdown
-```quiz
+```note-quiz
 quiz:
   type: choice
   question: "Which command shows memory usage?"
@@ -72,7 +74,7 @@ quiz:
   explanation: "free shows physical memory and swap usage."
 ```
 
-```quiz
+```note-quiz
 quiz:
   type: text
   question: "Name a command that shows memory usage."
@@ -131,4 +133,4 @@ The parser, quiz session, grading, result storage, prompt builder, UI, and Claud
 
 See [the test guide](docs/testing.md) for coverage and manual checks. Multiple selection, shuffling, spaced repetition, AI answer grading, and a vault-wide dashboard are not implemented yet.
 
-Report bugs or request features in [GitHub issues](https://github.com/ryokarimata/note-quiz-engine/issues). Released under the [MIT license](LICENSE).
+Report bugs or request features in [GitHub issues](https://github.com/port22-dev/note-quiz-engine/issues). Released under the [MIT license](LICENSE).

@@ -1,4 +1,10 @@
-# Note Quiz Engine 0.3.0
+# Note Quiz Engine 0.3.1
+
+Fix startup failure when another plugin has registered the `quiz` code block language.
+New quiz notes use `note-quiz` blocks. Existing `quiz` notes remain playable through
+the **Start quiz** toolbar button. Change their opening fence to `note-quiz` for inline cards.
+
+Validation: build, lint, 222 tests, and bundled startup smoke test with `quiz` already registered.
 
 Turn your notes into quizzes, practise, and keep your results in Markdown.
 
