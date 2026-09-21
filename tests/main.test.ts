@@ -7,7 +7,7 @@ import { parseQuizMarkdown } from '../src/parser';
 
 const source = '```quiz\nquiz:\n  type: text\n  question: "コマンドは？"\n  answers: ["free"]\n  explanation: "メモリを確認します。"\n```\n';
 
-async function setup() {
+async function setup(existingLanguages: string[] = []) {
   const file = { path: 'Linux.md', basename: 'Linux', extension: 'md' };
   const vault = { read: vi.fn().mockResolvedValue(source), process: vi.fn().mockResolvedValue(''), getAbstractFileByPath: vi.fn(() => null) };
   const workspace = { getActiveFile: vi.fn(() => file), getActiveViewOfType: vi.fn(), getLeavesOfType: vi.fn((): Array<{ view: unknown }> => []), onLayoutReady: vi.fn((callback: () => void) => callback()), on: vi.fn() };
@@ -15,6 +15,12 @@ async function setup() {
   const commands = new Map<string, Command>();
   vi.spyOn(plugin, 'addCommand').mockImplementation((command) => { commands.set(command.id, command); return command; });
   const processor = vi.spyOn(plugin, 'registerMarkdownCodeBlockProcessor');
+  const languages = new Set(existingLanguages);
+  processor.mockImplementation((language) => {
+    if (languages.has(language)) throw new Error(`Code block postprocessor for language ${language} is already registered`);
+    languages.add(language);
+    return (() => undefined);
+  });
   await plugin.onload();
   return { plugin, commands, vault, workspace, processor, file };
 }
@@ -22,10 +28,17 @@ async function setup() {
 afterEach(() => { document.body.replaceChildren(); vi.restoreAllMocks(); });
 
 describe('plugin commands', () => {
+  it('loads alongside a plugin that owns quiz blocks and still plays legacy notes', async () => {
+    const { plugin, processor, commands } = await setup(['quiz']);
+    expect(processor).not.toHaveBeenCalledWith('quiz', expect.any(Function));
+    commands.get('start-quiz')!.checkCallback!(false);
+    await vi.waitFor(() => expect(document.body.textContent).toContain('コマンドは？'));
+    plugin.onunload();
+  });
   it('registers all MVP commands and reading-view rendering', async () => {
     const { plugin, commands, processor } = await setup();
     expect([...commands.keys()]).toEqual(['generate-and-save-quiz', 'start-quiz', 'generate-quiz-prompt', 'import-quiz-from-clipboard', 'insert-quiz-template']);
-    expect(processor).toHaveBeenCalledWith('quiz', expect.any(Function));
+    expect(processor).toHaveBeenCalledWith('note-quiz', expect.any(Function));
     expect(commands.get('start-quiz')!.checkCallback!(true)).toBe(true);
     expect(document.body.textContent).toBe('');
     plugin.onunload();

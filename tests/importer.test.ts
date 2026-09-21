@@ -29,7 +29,7 @@ describe('clipboard quiz import', () => {
     const wrapped = `\`\`\`markdown\nAIの説明です。\n${quiz}\n\`\`\``;
     const plan = planClipboardQuizImport(wrapped, 'wrapped.md', new Set(), new Date('2026-09-21T12:30:00.000Z'));
     expect(plan.questionCount).toBe(1);
-    expect(plan.content.startsWith('```quiz')).toBe(true);
+    expect(plan.content.startsWith('```note-quiz')).toBe(true);
   });
 
   it('bounds filenames and removes control characters and path separators', () => {

@@ -18,7 +18,7 @@ describe('buildQuizPrompt', () => {
     expect(prompt).toContain('underlying principles');
     expect(prompt).toContain('There is no semantic or partial matching.');
     expect(prompt).toContain('1-based integer');
-    expect(prompt).toContain('```quiz\nquiz:');
+    expect(prompt).toContain('```note-quiz\nquiz:');
     expect(prompt).toContain('type: choice');
     expect(prompt).toContain('type: text');
     expect(prompt).toContain('5 questions');
