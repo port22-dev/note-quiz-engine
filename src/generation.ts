@@ -73,6 +73,7 @@ export class QuizGenerationService {
       const prompt = `${buildQuizPrompt({
         template: request.settings.promptTemplate, noteTitle: request.source.basename, notePath: request.source.path,
         noteContent: request.content, questionCount: request.settings.questionCount, generationId: request.generationId,
+        generationLanguage: request.settings.generationLanguage,
       })}\n\nAUTOMATIC SAVE MODE\nThe full source note is included in this message. Do not run tools, create files, or edit files. Return only quiz code blocks based on the source note in your final answer. Do not return the syntax examples as questions. Note Quiz Engine will validate and save the quiz automatically.`;
       const response = await this.generator.generate(prompt, { signal: controller.signal, onStatus });
       if (controller.signal.aborted) throw new Error('Quiz generation cancelled.');

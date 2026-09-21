@@ -4,13 +4,17 @@ import { DEFAULT_PROMPT_TEMPLATE } from './prompt';
 import { DEFAULT_QUIZ_FOLDER, LEGACY_QUIZ_FOLDER, normalizeQuizFolder } from './output-folder';
 
 export interface QuizSettings {
+  generationLanguage: GenerationLanguage;
   caseSensitive: boolean;
   questionCount: number;
   promptTemplate: string;
   outputFolder: string;
 }
 
+export type GenerationLanguage = 'ja' | 'en' | 'source';
+
 export const DEFAULT_SETTINGS: QuizSettings = {
+  generationLanguage: 'ja',
   caseSensitive: true,
   questionCount: 10,
   promptTemplate: DEFAULT_PROMPT_TEMPLATE,
@@ -25,6 +29,8 @@ export function loadQuizSettings(data: unknown): QuizSettings {
     try { outputFolder = normalizeQuizFolder(value.outputFolder); } catch { /* Repair invalid saved paths. */ }
   }
   return {
+    generationLanguage: value.generationLanguage === 'en' || value.generationLanguage === 'source' || value.generationLanguage === 'ja'
+      ? value.generationLanguage : DEFAULT_SETTINGS.generationLanguage,
     caseSensitive: typeof value.caseSensitive === 'boolean' ? value.caseSensitive : DEFAULT_SETTINGS.caseSensitive,
     questionCount: typeof value.questionCount === 'number' && Number.isInteger(value.questionCount) && value.questionCount >= 1 && value.questionCount <= 100 ? value.questionCount : DEFAULT_SETTINGS.questionCount,
     promptTemplate: typeof value.promptTemplate === 'string' && value.promptTemplate.trim() ? value.promptTemplate : DEFAULT_SETTINGS.promptTemplate,
@@ -45,6 +51,19 @@ export class QuizSettingsTab extends PluginSettingTab {
   display(): void {
     const { containerEl } = this;
     containerEl.empty();
+    new Setting(containerEl).setName('Quiz generation language')
+      .setDesc('Language used for generated questions, choices, answers, and explanations.')
+      .addDropdown((dropdown) => dropdown
+        .addOption('ja', '日本語')
+        .addOption('en', 'English')
+        .addOption('source', '元ノートと同じ言語')
+        .setValue(this.host.settings.generationLanguage)
+        .onChange((value) => {
+          if (value === 'ja' || value === 'en' || value === 'source') {
+            this.host.settings.generationLanguage = value;
+            void this.host.persistSettings();
+          }
+        }));
     new Setting(containerEl).setName('Case-sensitive answers')
       .setDesc('When off, FREE and free are treated as the same answer. Applies to new quiz attempts.')
       .addToggle((toggle) => toggle.setValue(this.host.settings.caseSensitive).onChange((value) => {
@@ -72,7 +91,7 @@ export class QuizSettingsTab extends PluginSettingTab {
       }
     }));
     new Setting(containerEl).setName('Prompt template')
-      .setDesc('Generate quiz sends this prompt and the current note to Claudian using your configured provider and account. Questions follow the note’s language. You can use {{noteTitle}}, {{notePath}}, {{noteContent}}, {{questionCount}}, and {{generationId}}. The required format and note content are always included.')
+      .setDesc('Generate quiz sends this prompt and the current note to Claudian using your configured provider and account. The selected quiz generation language is applied first. You can use {{noteTitle}}, {{notePath}}, {{noteContent}}, {{questionCount}}, and {{generationId}}. The required format and note content are always included.')
       .addTextArea((text) => {
         text.inputEl.rows = 15;
         text.inputEl.addClass('note-quiz-template-setting');
