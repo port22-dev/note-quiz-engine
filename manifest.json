@@ -1,7 +1,7 @@
 {
   "id": "note-quiz-engine",
   "name": "Note Quiz Engine",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "minAppVersion": "1.8.7",
   "description": "Turn notes into quizzes, practice multiple-choice and text questions, and track your scores in Markdown.",
   "author": "port22",

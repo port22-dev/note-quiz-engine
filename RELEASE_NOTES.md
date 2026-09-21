@@ -1,4 +1,4 @@
-# Note Quiz Engine 0.3.1
+# Note Quiz Engine 0.3.2
 
 Fix startup failure when another plugin has registered the `quiz` code block language.
 New quiz notes use `note-quiz` blocks. Existing `quiz` notes remain playable through
