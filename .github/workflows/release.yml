@@ -24,11 +24,15 @@ jobs:
         run: node -e 'const m=require("./manifest.json"); if(process.env.GITHUB_REF_NAME !== m.version) throw new Error("Tag must match manifest version");'
       - run: pnpm run check
       - run: pnpm run package
-      - name: Create release
+      - name: Publish release assets
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           cd dist
           zip -r note-quiz-engine.zip note-quiz-engine
           cd ..
-          gh release create "$GITHUB_REF_NAME" main.js manifest.json styles.css dist/note-quiz-engine.zip --verify-tag --title "Note Quiz Engine $GITHUB_REF_NAME" --notes-file RELEASE_NOTES.md
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" main.js manifest.json styles.css dist/note-quiz-engine.zip --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" main.js manifest.json styles.css dist/note-quiz-engine.zip --verify-tag --title "Note Quiz Engine $GITHUB_REF_NAME" --notes-file RELEASE_NOTES.md
+          fi
