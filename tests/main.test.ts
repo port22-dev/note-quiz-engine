@@ -123,7 +123,7 @@ describe('plugin commands', () => {
 
 describe('persisted settings validation', () => {
   it('retains valid settings and repairs corrupted persisted data', () => {
-    expect(loadQuizSettings({ caseSensitive: false, questionCount: 5, promptTemplate: 'Custom' })).toEqual({ caseSensitive: false, questionCount: 5, promptTemplate: 'Custom', outputFolder: '過去問題集' });
+    expect(loadQuizSettings({ caseSensitive: false, questionCount: 5, promptTemplate: 'Custom' })).toEqual({ generationLanguage: 'ja', caseSensitive: false, questionCount: 5, promptTemplate: 'Custom', outputFolder: '過去問題集' });
     const repaired = loadQuizSettings({ caseSensitive: 'false', questionCount: 0, promptTemplate: '' });
     expect(repaired.caseSensitive).toBe(true);
     expect(repaired.questionCount).toBe(10);

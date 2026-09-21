@@ -116,7 +116,7 @@ describe('generated quiz normalization', () => {
   it('rejects copied prompt examples, even when real questions are also present', () => {
     const prompt = buildQuizPrompt({
       template: DEFAULT_PROMPT_TEMPLATE, noteTitle: '学習ノート', notePath: '学習ノート.md',
-      noteContent: 'Linuxのノート', questionCount: 2, generationId: 'attempt-1',
+      noteContent: 'Linuxのノート', questionCount: 2, generationId: 'attempt-1', generationLanguage: 'ja',
     });
     expect(() => normalizeGeneratedQuiz(`${quiz}\n${prompt}`)).toThrow('prompt examples');
   });

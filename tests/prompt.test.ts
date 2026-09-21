@@ -8,6 +8,7 @@ const context: PromptContext = {
   noteContent: 'free はメモリの使用状況を表示します。',
   questionCount: 5,
   generationId: 'attempt-01',
+  generationLanguage: 'ja',
 };
 
 describe('buildQuizPrompt', () => {
@@ -82,11 +83,22 @@ describe('buildQuizPrompt', () => {
     expect(() => buildQuizPrompt({ ...context, questionCount })).toThrow('integer of 1 or more');
   });
 
-  it('keeps the source language by default and lets custom instructions override it', () => {
+  it('puts the selected language ahead of provider and source-language defaults', () => {
     const prompt = buildQuizPrompt({ ...context, template: 'Write all questions in Spanish.' });
     expect(prompt).toContain('Write all questions in Spanish.');
-    expect(prompt).toContain("in the source note's language unless the custom instructions explicitly request a different language");
+    expect(prompt).toContain('Output language: Japanese (日本語)');
+    expect(prompt).toContain('This overrides the source note language and any provider default');
     expect(prompt).toContain('Preserve commands and technical identifiers.');
     expect(prompt).toContain(context.noteContent);
+  });
+
+  it.each([
+    ['ja', 'Output language: Japanese (日本語)', 'question, options, answers, and explanation must all be Japanese'],
+    ['en', 'Output language: English', 'question, options, answers, and explanation must all be English'],
+    ['source', 'Output language: the same language as the source note', 'Use this source-language behavior only because the user selected it'],
+  ] as const)('includes an explicit %s language contract', (language, contract, detail) => {
+    const prompt = buildQuizPrompt({ ...context, generationLanguage: language });
+    expect(prompt).toContain(contract);
+    expect(prompt).toContain(detail);
   });
 });
